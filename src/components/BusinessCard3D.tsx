@@ -103,9 +103,6 @@ export default function BusinessCard3D({ member, isPreview = false }: BusinessCa
               <p className="text-white font-medium text-sm">
                 {member.role}
               </p>
-              <p className="text-white/70 text-xs">
-                {member.department}
-              </p>
             </div>
           </div>
 

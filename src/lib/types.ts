@@ -3,7 +3,6 @@ export interface TeamMember {
   name: string;
   nameEn: string;
   role: string;
-  department: string;
   email: string;
   phone: string;
   bio: string;
@@ -24,7 +23,6 @@ export interface MemberRow {
   name: string;
   name_en: string;
   role: string;
-  department: string;
   email: string;
   phone: string;
   bio: string;

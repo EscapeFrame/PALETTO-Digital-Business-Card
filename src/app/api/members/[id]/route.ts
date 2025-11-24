@@ -32,7 +32,6 @@ export async function GET(
       name: member.name,
       nameEn: member.name_en,
       role: member.role,
-      department: member.department,
       email: member.email,
       phone: member.phone,
       bio: member.bio,
@@ -67,13 +66,12 @@ export async function PUT(
     // Update member
     await query(
       `UPDATE members
-       SET name = ?, name_en = ?, role = ?, department = ?, email = ?, phone = ?, bio = ?, avatar = ?, gradient_from = ?, gradient_to = ?
+       SET name = ?, name_en = ?, role = ?, email = ?, phone = ?, bio = ?, avatar = ?, gradient_from = ?, gradient_to = ?
        WHERE id = ?`,
       [
         body.name,
         body.nameEn,
         body.role,
-        body.department,
         body.email,
         body.phone,
         body.bio,

@@ -21,7 +21,6 @@ const emptyMember: Omit<TeamMember, 'id'> = {
   name: '',
   nameEn: '',
   role: '',
-  department: '',
   email: '',
   phone: '',
   bio: '',
@@ -65,7 +64,6 @@ export default function AdminDashboard() {
         name: member.name,
         nameEn: member.nameEn,
         role: member.role,
-        department: member.department,
         email: member.email,
         phone: member.phone,
         bio: member.bio,
@@ -305,29 +303,16 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">역할</label>
-                    <input
-                      type="text"
-                      value={formData.role}
-                      onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-paletto-sky focus:ring-2 focus:ring-paletto-sky/20 outline-none"
-                      placeholder="예: Frontend Developer"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">부서</label>
-                    <input
-                      type="text"
-                      value={formData.department}
-                      onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-paletto-sky focus:ring-2 focus:ring-paletto-sky/20 outline-none"
-                      placeholder="예: Engineering"
-                      required
-                    />
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">역할</label>
+                  <input
+                    type="text"
+                    value={formData.role}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-paletto-sky focus:ring-2 focus:ring-paletto-sky/20 outline-none"
+                    placeholder="예: Frontend Developer"
+                    required
+                  />
                 </div>
 
                 {/* Contact */}
