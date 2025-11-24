@@ -131,6 +131,28 @@ export default function BusinessCard3D({ member, isPreview = false, showDownload
             borderBottomWidth: '4px',
           }}
         >
+          {/* Left gradient line - 위로 향함 (아래에서 위로 투명해짐) */}
+          <svg className="absolute left-0 top-0 h-full" width="2" viewBox="0 0 2 351" fill="none" preserveAspectRatio="none">
+            <path d="M0 1C0 0.447715 0.447715 0 1 0C1.55228 0 2 0.447715 2 1H1H0ZM1 351H0V1H1H2V351H1Z" fill="url(#paint0_linear_left)"/>
+            <defs>
+              <linearGradient id="paint0_linear_left" x1="0.5" y1="351" x2="0.5" y2="1" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#0077FF"/>
+                <stop offset="1" stopColor="#0077FF" stopOpacity="0"/>
+              </linearGradient>
+            </defs>
+          </svg>
+
+          {/* Right gradient line - 아래로 향함 (위에서 아래로 투명해짐) */}
+          <svg className="absolute right-0 top-0 h-full" width="2" viewBox="0 0 2 351" fill="none" preserveAspectRatio="none" style={{ transform: 'rotate(180deg)' }}>
+            <path d="M0 1C0 0.447715 0.447715 0 1 0C1.55228 0 2 0.447715 2 1H1H0ZM1 351H0V1H1H2V351H1Z" fill="url(#paint0_linear_right)"/>
+            <defs>
+              <linearGradient id="paint0_linear_right" x1="0.5" y1="351" x2="0.5" y2="1" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#0077FF"/>
+                <stop offset="1" stopColor="#0077FF" stopOpacity="0"/>
+              </linearGradient>
+            </defs>
+          </svg>
+
           <div className="relative h-full p-5 flex justify-between">
             {/* Left Content */}
             <div className="flex flex-col justify-center">
