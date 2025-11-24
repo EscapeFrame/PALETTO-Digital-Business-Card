@@ -12,6 +12,7 @@ export interface TeamMember {
     linkedin?: string;
     twitter?: string;
     instagram?: string;
+    discord?: string;
   };
   avatar: string;
   gradientFrom: string;
@@ -38,6 +39,6 @@ export interface SkillRow {
 
 export interface SocialRow {
   member_id: string;
-  platform: 'github' | 'linkedin' | 'twitter' | 'instagram';
+  platform: 'github' | 'linkedin' | 'twitter' | 'instagram' | 'discord';
   url: string;
 }
