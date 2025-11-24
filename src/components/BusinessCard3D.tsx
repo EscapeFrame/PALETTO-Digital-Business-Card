@@ -108,7 +108,7 @@ export default function BusinessCard3D({ member, isPreview = false, showDownload
       <motion.div
         className="w-full h-full preserve-3d"
         animate={{
-          rotateX: isFlipped ? 180 : rotateX,
+          rotateX: isFlipped ? 180 : (rotateX || 5),
           rotateY: isFlipped ? 0 : rotateY,
         }}
         transition={{
