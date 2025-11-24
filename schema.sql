@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS members (
     name VARCHAR(100) NOT NULL,
     name_en VARCHAR(100) NOT NULL,
     role VARCHAR(200) NOT NULL,
-    department VARCHAR(100) NOT NULL,
     email VARCHAR(200) NOT NULL,
     phone VARCHAR(50) NOT NULL,
     bio TEXT NOT NULL,
@@ -56,10 +55,10 @@ VALUES ('admin_password_hash', '$2a$10$example_hash_replace_me')
 ON DUPLICATE KEY UPDATE setting_value = setting_value;
 
 -- Sample data (optional - you can remove this)
-INSERT INTO members (id, name, name_en, role, department, email, phone, bio, avatar, gradient_from, gradient_to) VALUES
-('kim-minjun', '김민준', 'Minjun Kim', 'Team Lead & Full-Stack Developer', 'Engineering', 'minjun@paletto.team', '+82 10-1234-5678', '사용자 경험을 최우선으로 생각하는 개발자입니다.', '👨‍💻', '#87CEEB', '#5DADE2'),
-('lee-suji', '이수지', 'Suji Lee', 'UI/UX Designer', 'Design', 'suji@paletto.team', '+82 10-2345-6789', '아름다움과 기능성의 조화를 추구하는 디자이너입니다.', '👩‍🎨', '#B0E0E6', '#87CEEB'),
-('park-jihoon', '박지훈', 'Jihoon Park', 'Backend Developer', 'Engineering', 'jihoon@paletto.team', '+82 10-3456-7890', '안정적이고 확장 가능한 시스템 구축을 목표로 합니다.', '👨‍🔧', '#5DADE2', '#3498DB')
+INSERT INTO members (id, name, name_en, role, email, phone, bio, avatar, gradient_from, gradient_to) VALUES
+('kim-minjun', '김민준', 'Minjun Kim', 'Team Lead & Full-Stack Developer', 'minjun@paletto.team', '+82 10-1234-5678', '사용자 경험을 최우선으로 생각하는 개발자입니다.', '👨‍💻', '#87CEEB', '#5DADE2'),
+('lee-suji', '이수지', 'Suji Lee', 'UI/UX Designer', 'suji@paletto.team', '+82 10-2345-6789', '아름다움과 기능성의 조화를 추구하는 디자이너입니다.', '👩‍🎨', '#B0E0E6', '#87CEEB'),
+('park-jihoon', '박지훈', 'Jihoon Park', 'Backend Developer', 'jihoon@paletto.team', '+82 10-3456-7890', '안정적이고 확장 가능한 시스템 구축을 목표로 합니다.', '👨‍🔧', '#5DADE2', '#3498DB')
 ON DUPLICATE KEY UPDATE name = VALUES(name);
 
 INSERT INTO skills (member_id, skill_name) VALUES
