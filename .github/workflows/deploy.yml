@@ -75,7 +75,7 @@ jobs:
             # Create app directory if not exists
             mkdir -p /home/${{ secrets.EC2_USER }}/palettobusinesscard
             cd /home/${{ secrets.EC2_USER }}/palettobusinesscard
-            
+
             # Backup current deployment
             if [ -d ".next" ]; then
               echo "Backing up current deployment..."
@@ -84,12 +84,12 @@ jobs:
               cp -r .next "$BACKUP_DIR/" 2>/dev/null || true
               cp .env "$BACKUP_DIR/" 2>/dev/null || true
             fi
-            
+
             # Extract new files
             echo "Extracting deployment files..."
             tar -xzf /tmp/deploy.tar.gz
             rm /tmp/deploy.tar.gz
-            
+
             # Create .env if not exists
             if [ ! -f .env ]; then
               echo "Creating .env file..."
@@ -103,26 +103,26 @@ jobs:
             ADMIN_PASSWORD=paletto2024
             EOF
             fi
-            
+
             # Start Docker MySQL if not running
             if ! docker ps | grep -q paletto_mysql; then
               echo "Starting MySQL container..."
               docker-compose up -d || true
               sleep 5
             fi
-            
+
             # Restart PM2 process
             echo "Restarting application..."
             pm2 restart paletto-business-card || pm2 start npm --name "paletto-business-card" -- start
-            
+
             # Save PM2 configuration
             pm2 save
-            
+
             # Clean old backups (keep last 3)
             echo "Cleaning old backups..."
             cd /home/${{ secrets.EC2_USER }}
             ls -dt palettobusinesscard_backup_* 2>/dev/null | tail -n +4 | xargs -r rm -rf || true
-            
+
             echo "Deployment completed!"
 
       - name: Verify deployment
