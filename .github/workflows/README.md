@@ -1,7 +1,7 @@
 # GitHub Actions 배포 설정
 
 이 워크플로우는 `master` 또는 `main` 브랜치에 푸시될 때 자동으로 EC2에 배포합니다.
-
+d
 ## 필요한 GitHub Secrets 설정
 
 GitHub 저장소의 Settings > Secrets and variables > Actions에서 다음 secrets을 추가하세요:
