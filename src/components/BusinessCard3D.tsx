@@ -247,7 +247,6 @@ export default function BusinessCard3D({ member, isPreview = false, showDownload
             backfaceVisibility: 'hidden',
             transform: 'rotateX(180deg)',
             background: '#FFFFFF',
-            border: '2px solid #2196F3',
           }}
         >
           <div className="h-full flex">
