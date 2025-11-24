@@ -26,6 +26,39 @@ export default function MemberPage() {
       });
   }, [params.id]);
 
+  const handleSaveContact = () => {
+    if (!member) return;
+
+    // 전화번호 포맷팅 (특수문자 제거)
+    const cleanPhone = member.phone.replace(/[^0-9+]/g, '');
+
+    // vCard 포맷으로 연락처 생성
+    const vCard = `BEGIN:VCARD
+VERSION:3.0
+FN:${member.name}
+N:${member.name};;;;
+NICKNAME:${member.nameEn}
+ORG:PALETTO
+TITLE:${member.role}
+EMAIL;TYPE=WORK:${member.email}
+TEL;TYPE=WORK,VOICE:${cleanPhone}
+TEL;TYPE=CELL:${cleanPhone}
+NOTE:${member.bio}
+URL:${window.location.href}
+END:VCARD`;
+
+    // Blob 생성 및 다운로드
+    const blob = new Blob([vCard], { type: 'text/vcard;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${member.name}.vcf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -76,7 +109,7 @@ export default function MemberPage() {
             className="sticky top-24"
           >
             <div className="max-w-md mx-auto lg:mx-0">
-              <BusinessCard3D member={member} />
+              <BusinessCard3D member={member} showDownloadButton={true} />
               <p className="text-center text-gray-400 text-sm mt-4">
                 카드 위에서 마우스를 움직이거나 클릭해보세요
               </p>
@@ -110,9 +143,6 @@ export default function MemberPage() {
                 <span className="px-3 py-1 bg-paletto-sky/20 text-paletto-sky-dark rounded-full text-sm">
                   {member.role}
                 </span>
-                <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
-                  {member.department}
-                </span>
               </div>
             </div>
 
@@ -124,7 +154,20 @@ export default function MemberPage() {
 
             {/* Contact */}
             <div className="glass rounded-2xl p-6">
-              <h2 className="text-lg font-bold text-gray-700 mb-4">연락처</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-gray-700">연락처</h2>
+                <motion.button
+                  onClick={handleSaveContact}
+                  className="px-4 py-2 bg-paletto-sky text-white text-sm font-medium rounded-lg hover:bg-paletto-sky-dark transition-colors flex items-center gap-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>연락처 저장</span>
+                </motion.button>
+              </div>
               <div className="space-y-3">
                 <a
                   href={`mailto:${member.email}`}
