@@ -34,30 +34,96 @@ jobs:
           DB_NAME: ${{ secrets.DB_NAME }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 
+      - name: Create deployment archive
+        run: |
+          tar -czf deploy.tar.gz \
+            --exclude=node_modules \
+            --exclude=.git \
+            --exclude=.github \
+            --exclude=.env \
+            .next \
+            public \
+            src \
+            package.json \
+            package-lock.json \
+            next.config.js \
+            tsconfig.json \
+            tailwind.config.ts \
+            postcss.config.js \
+            schema.sql \
+            docker-compose.yml \
+            .dockerignore
+
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT || 22 }}
+          source: "deploy.tar.gz"
+          target: "/tmp/"
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          port: ${{ secrets.EC2_PORT }}
+          port: ${{ secrets.EC2_PORT || 22 }}
           script: |
+            # Create app directory if not exists
+            mkdir -p /home/${{ secrets.EC2_USER }}/palettobusinesscard
             cd /home/${{ secrets.EC2_USER }}/palettobusinesscard
-
-            # Pull latest code
-            git pull origin master
-
-            # Install dependencies
-            npm ci
-
-            # Build application
-            npm run build
-
+            
+            # Backup current deployment
+            if [ -d ".next" ]; then
+              echo "Backing up current deployment..."
+              BACKUP_DIR="/home/${{ secrets.EC2_USER }}/palettobusinesscard_backup_$(date +%Y%m%d_%H%M%S)"
+              mkdir -p "$BACKUP_DIR"
+              cp -r .next "$BACKUP_DIR/" 2>/dev/null || true
+              cp .env "$BACKUP_DIR/" 2>/dev/null || true
+            fi
+            
+            # Extract new files
+            echo "Extracting deployment files..."
+            tar -xzf /tmp/deploy.tar.gz
+            rm /tmp/deploy.tar.gz
+            
+            # Create .env if not exists
+            if [ ! -f .env ]; then
+              echo "Creating .env file..."
+              cat > .env << 'EOF'
+            DB_HOST=localhost
+            DB_PORT=3306
+            DB_USER=paletto_user
+            DB_PASSWORD=paletto_password
+            DB_ROOT_PASSWORD=paletto_root_password
+            DB_NAME=paletto_cards
+            ADMIN_PASSWORD=paletto2024
+            EOF
+            fi
+            
+            # Start Docker MySQL if not running
+            if ! docker ps | grep -q paletto_mysql; then
+              echo "Starting MySQL container..."
+              docker-compose up -d || true
+              sleep 5
+            fi
+            
             # Restart PM2 process
+            echo "Restarting application..."
             pm2 restart paletto-business-card || pm2 start npm --name "paletto-business-card" -- start
-
+            
             # Save PM2 configuration
             pm2 save
+            
+            # Clean old backups (keep last 3)
+            echo "Cleaning old backups..."
+            cd /home/${{ secrets.EC2_USER }}
+            ls -dt palettobusinesscard_backup_* 2>/dev/null | tail -n +4 | xargs -r rm -rf || true
+            
+            echo "Deployment completed!"
 
       - name: Verify deployment
         uses: appleboy/ssh-action@master
