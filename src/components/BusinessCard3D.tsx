@@ -126,9 +126,6 @@ export default function BusinessCard3D({ member, isPreview = false, showDownload
           style={{
             backfaceVisibility: 'hidden',
             background: '#FFFFFF',
-            border: '2px solid #1a1a1a',
-            borderLeftWidth: '4px',
-            borderBottomWidth: '4px',
           }}
         >
           {/* Left gradient line - 위로 향함 (아래에서 위로 투명해짐) */}
@@ -289,9 +286,6 @@ export default function BusinessCard3D({ member, isPreview = false, showDownload
           overflow: 'hidden',
           position: 'relative',
           backgroundColor: '#FFFFFF',
-          border: '2px solid #1a1a1a',
-          borderLeftWidth: '4px',
-          borderBottomWidth: '4px',
         }}
       >
         <div style={{
