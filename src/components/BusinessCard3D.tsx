@@ -67,7 +67,7 @@ export default function BusinessCard3D({ member, isPreview = false, showDownload
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current || isPreview) return;
+    if (!cardRef.current) return;
 
     const rect = cardRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
