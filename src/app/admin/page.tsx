@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import AdminDashboard from '@/components/AdminDashboard';
 
 export default function AdminPage() {
-  const { isAdmin, login } = useAuth();
+  const { isAdmin, isLoading: authLoading, login } = useAuth();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -16,15 +16,20 @@ export default function AdminPage() {
     setIsLoading(true);
     setError('');
 
-    // Simulate loading
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    const success = login(password);
+    const success = await login(password);
     if (!success) {
       setError('비밀번호가 올바르지 않습니다');
     }
     setIsLoading(false);
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-paletto-sky border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (isAdmin) {
     return <AdminDashboard />;

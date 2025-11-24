@@ -1,36 +1,43 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { login as apiLogin } from '@/lib/api';
 
 interface AuthContextType {
   isAdmin: boolean;
-  login: (password: string) => boolean;
+  isLoading: boolean;
+  login: (password: string) => Promise<boolean>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Default admin password - in production, this should be handled securely
-const ADMIN_PASSWORD = 'paletto2024';
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Check if admin is logged in from localStorage
     const adminToken = localStorage.getItem('paletto_admin_token');
-    if (adminToken === 'authenticated') {
+    if (adminToken) {
       setIsAdmin(true);
     }
+    setIsLoading(false);
   }, []);
 
-  const login = (password: string): boolean => {
-    if (password === ADMIN_PASSWORD) {
-      setIsAdmin(true);
-      localStorage.setItem('paletto_admin_token', 'authenticated');
-      return true;
+  const login = async (password: string): Promise<boolean> => {
+    try {
+      const result = await apiLogin(password);
+      if (result.success && result.token) {
+        setIsAdmin(true);
+        localStorage.setItem('paletto_admin_token', result.token);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Login error:', error);
+      return false;
     }
-    return false;
   };
 
   const logout = () => {
@@ -39,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAdmin, login, logout }}>
+    <AuthContext.Provider value={{ isAdmin, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

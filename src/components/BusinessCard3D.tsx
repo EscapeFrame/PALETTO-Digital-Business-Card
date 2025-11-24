@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { TeamMember } from '@/data/members';
+import { TeamMember } from '@/lib/types';
 import Link from 'next/link';
 
 interface BusinessCard3DProps {

@@ -3,16 +3,25 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import BusinessCard3D from '@/components/BusinessCard3D';
-import { TeamMember } from '@/data/members';
-import { getStoredMembers } from '@/lib/memberStore';
+import { TeamMember } from '@/lib/types';
+import { fetchMembers } from '@/lib/api';
 
 export default function Home() {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setMembers(getStoredMembers());
-    setIsLoaded(true);
+    fetchMembers()
+      .then((data) => {
+        setMembers(data);
+        setIsLoaded(true);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch members:', err);
+        setError('데이터를 불러오는데 실패했습니다');
+        setIsLoaded(true);
+      });
   }, []);
 
   return (
@@ -60,6 +69,10 @@ export default function Home() {
               Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="aspect-[1.8/1] rounded-2xl bg-white/50 animate-pulse" />
               ))
+            ) : error ? (
+              <div className="col-span-full text-center py-12">
+                <p className="text-red-500">{error}</p>
+              </div>
             ) : members.length === 0 ? (
               <div className="col-span-full text-center py-12">
                 <p className="text-gray-500">아직 등록된 팀원이 없습니다</p>

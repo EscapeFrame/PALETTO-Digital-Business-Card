@@ -5,8 +5,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import BusinessCard3D from '@/components/BusinessCard3D';
-import { TeamMember } from '@/data/members';
-import { getMemberById } from '@/lib/memberStore';
+import { TeamMember } from '@/lib/types';
+import { fetchMember } from '@/lib/api';
 
 export default function MemberPage() {
   const params = useParams();
@@ -14,9 +14,16 @@ export default function MemberPage() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const foundMember = getMemberById(params.id as string);
-    setMember(foundMember || null);
-    setIsLoaded(true);
+    fetchMember(params.id as string)
+      .then((data) => {
+        setMember(data);
+        setIsLoaded(true);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch member:', err);
+        setMember(null);
+        setIsLoaded(true);
+      });
   }, [params.id]);
 
   if (!isLoaded) {

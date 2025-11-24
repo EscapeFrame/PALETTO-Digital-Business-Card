@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
-import { TeamMember } from '@/data/members';
-import { getStoredMembers, addMember, updateMember, deleteMember, generateMemberId } from '@/lib/memberStore';
+import { TeamMember } from '@/lib/types';
+import { fetchMembers, createMember, updateMember as apiUpdateMember, deleteMember as apiDeleteMember } from '@/lib/api';
 import BusinessCard3D from './BusinessCard3D';
 
 const EMOJI_OPTIONS = ['👨‍💻', '👩‍💻', '👨‍🎨', '👩‍🎨', '👨‍💼', '👩‍💼', '👨‍🔧', '👩‍🔬', '👨‍🏫', '👩‍🏫', '🧑‍💻', '🧑‍🎨'];
@@ -40,10 +40,23 @@ export default function AdminDashboard() {
   const [formData, setFormData] = useState<Omit<TeamMember, 'id'>>(emptyMember);
   const [skillInput, setSkillInput] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    setMembers(getStoredMembers());
+    loadMembers();
   }, []);
+
+  const loadMembers = async () => {
+    try {
+      const data = await fetchMembers();
+      setMembers(data);
+    } catch (error) {
+      console.error('Failed to load members:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleOpenModal = (member?: TeamMember) => {
     if (member) {
@@ -76,27 +89,34 @@ export default function AdminDashboard() {
     setSkillInput('');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
 
-    if (editingMember) {
-      const updated = updateMember(editingMember.id, { ...formData, id: editingMember.id });
-      setMembers(updated);
-    } else {
-      const newMember: TeamMember = {
-        ...formData,
-        id: generateMemberId(formData.name),
-      };
-      const updated = addMember(newMember);
-      setMembers(updated);
+    try {
+      if (editingMember) {
+        await apiUpdateMember(editingMember.id, { ...formData, id: editingMember.id });
+      } else {
+        await createMember(formData);
+      }
+      await loadMembers();
+      handleCloseModal();
+    } catch (error) {
+      console.error('Failed to save member:', error);
+      alert('저장 중 오류가 발생했습니다.');
+    } finally {
+      setIsSaving(false);
     }
-
-    handleCloseModal();
   };
 
-  const handleDelete = (id: string) => {
-    const updated = deleteMember(id);
-    setMembers(updated);
+  const handleDelete = async (id: string) => {
+    try {
+      await apiDeleteMember(id);
+      await loadMembers();
+    } catch (error) {
+      console.error('Failed to delete member:', error);
+      alert('삭제 중 오류가 발생했습니다.');
+    }
     setDeleteConfirm(null);
   };
 
@@ -146,6 +166,19 @@ export default function AdminDashboard() {
         </div>
 
         {/* Members Grid */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="glass rounded-2xl p-4">
+                <div className="aspect-[1.8/1] rounded-xl bg-gray-200 animate-pulse mb-4" />
+                <div className="flex gap-2">
+                  <div className="flex-1 h-10 bg-gray-200 rounded-lg animate-pulse" />
+                  <div className="w-16 h-10 bg-gray-200 rounded-lg animate-pulse" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {members.map((member) => (
             <motion.div
@@ -195,8 +228,9 @@ export default function AdminDashboard() {
             </motion.div>
           ))}
         </div>
+        )}
 
-        {members.length === 0 && (
+        {!isLoading && members.length === 0 && (
           <div className="text-center py-20">
             <div className="w-20 h-20 mx-auto rounded-full bg-paletto-sky/10 flex items-center justify-center mb-4">
               <svg className="w-10 h-10 text-paletto-sky" fill="none" stroke="currentColor" viewBox="0 0 24 24">
