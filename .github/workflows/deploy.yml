@@ -102,9 +102,17 @@ jobs:
               sleep 5
             fi
 
-            # Restart PM2 process
-            echo "Restarting application..."
-            pm2 restart paletto-business-card || pm2 start npm --name "paletto-business-card" -- start
+            # Stop existing PM2 process if running
+            echo "Checking for existing application..."
+            if pm2 list | grep -q paletto-business-card; then
+              echo "Stopping existing application..."
+              pm2 stop paletto-business-card
+              pm2 delete paletto-business-card
+            fi
+
+            # Start new PM2 process
+            echo "Starting new application..."
+            pm2 start npm --name "paletto-business-card" -- start
 
             # Save PM2 configuration
             pm2 save
