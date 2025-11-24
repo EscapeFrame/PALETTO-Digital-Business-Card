@@ -212,11 +212,11 @@ export default function BusinessCard3D({ member, isPreview = false, showDownload
     </div>
   );
 
-  // 다운로드용 카드 (QR 코드 포함, 숨김 처리)
+  // 다운로드용 카드 (businessCard 4-1 디자인)
   const DownloadCard = (
     <div
       ref={downloadCardRef}
-      style={{ 
+      style={{
         position: 'fixed',
         top: '-9999px',
         left: '0',
@@ -229,136 +229,133 @@ export default function BusinessCard3D({ member, isPreview = false, showDownload
         style={{
           width: '600px',
           height: '337.5px',
-          borderRadius: '16px',
+          borderRadius: '12px',
           overflow: 'hidden',
           position: 'relative',
-          background: `linear-gradient(135deg, ${member.gradientFrom} 0%, ${member.gradientTo} 100%)`,
+          backgroundColor: '#FFFFFF',
+          border: '3px solid #2196F3',
+          borderLeftWidth: '6px',
+          borderBottomWidth: '6px',
         }}
       >
-        <div style={{ 
-          position: 'relative', 
-          height: '100%', 
-          padding: '32px',
+        <div style={{
+          position: 'relative',
+          height: '100%',
+          padding: '40px 50px',
           display: 'flex',
-          flexDirection: 'column',
           justifyContent: 'space-between'
         }}>
-          {/* Top section */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '40px',
-                marginBottom: '16px'
-              }}>
-                {member.avatar}
-              </div>
-              <h3 style={{ 
-                color: 'white', 
-                fontSize: '30px', 
-                fontWeight: 'bold',
-                marginBottom: '4px',
-                textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+          {/* Left Content */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: '8px'
+          }}>
+            {/* Role */}
+            <p style={{
+              color: '#2196F3',
+              fontSize: '18px',
+              fontStyle: 'italic',
+              fontWeight: '500',
+              marginBottom: '4px'
+            }}>
+              {member.role}
+            </p>
+
+            {/* Name */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              gap: '12px',
+              marginBottom: '16px'
+            }}>
+              <h3 style={{
+                color: '#1a1a1a',
+                fontSize: '42px',
+                fontWeight: '900',
+                letterSpacing: '-1px',
+                fontFamily: 'system-ui, -apple-system, sans-serif'
               }}>
                 {member.name}
               </h3>
-              <p style={{ 
-                color: 'rgba(255, 255, 255, 0.8)', 
+              <span style={{
+                color: '#666666',
                 fontSize: '18px',
-                marginBottom: '8px'
+                fontWeight: '400'
               }}>
                 {member.nameEn}
-              </p>
-              <p style={{ 
-                color: 'white', 
-                fontSize: '18px',
-                fontWeight: '500'
-              }}>
-                {member.role}
-              </p>
+              </span>
             </div>
-            {/* QR Code */}
-            {qrCodeUrl && (
-              <div style={{
-                backgroundColor: 'white',
-                padding: '8px',
-                borderRadius: '12px',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-              }}>
-                <img src={qrCodeUrl} alt="QR Code" style={{ width: '112px', height: '112px', display: 'block' }} />
-                <p style={{ 
-                  fontSize: '12px', 
-                  textAlign: 'center', 
-                  color: '#4B5563',
-                  marginTop: '4px'
-                }}>Scan me</p>
+
+            {/* Contact Info */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {/* Phone */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <svg style={{ width: '20px', height: '20px', color: '#1a1a1a' }} fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                </svg>
+                <span style={{ fontSize: '16px', color: '#1a1a1a', fontFamily: 'system-ui, -apple-system, sans-serif' }}>{member.phone}</span>
               </div>
-            )}
+
+              {/* Email */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <svg style={{ width: '20px', height: '20px', color: '#1a1a1a' }} fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+                <span style={{ fontSize: '16px', color: '#1a1a1a', fontFamily: 'system-ui, -apple-system, sans-serif' }}>{member.email}</span>
+              </div>
+
+              {/* GitHub */}
+              {member.social.github && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <svg style={{ width: '20px', height: '20px', color: '#1a1a1a' }} fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                  <span style={{ fontSize: '16px', color: '#1a1a1a', fontFamily: 'system-ui, -apple-system, sans-serif' }}>{member.social.github}</span>
+                </div>
+              )}
+
+              {/* Discord */}
+              {member.social.discord && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <svg style={{ width: '20px', height: '20px', color: '#1a1a1a' }} fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+                  </svg>
+                  <span style={{ fontSize: '16px', color: '#1a1a1a', fontFamily: 'system-ui, -apple-system, sans-serif' }}>{member.social.discord}</span>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Contact info */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
-              <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <span style={{ fontSize: '14px' }}>{member.email}</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
-              <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              <span style={{ fontSize: '14px' }}>{member.phone}</span>
-            </div>
-          </div>
+          {/* Right Section - Vertical Line and PALETTO Logo */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '20px',
+            paddingRight: '10px'
+          }}>
+            {/* Vertical Line */}
+            <div style={{
+              width: '2px',
+              height: '70%',
+              backgroundColor: '#1a1a1a'
+            }} />
 
-          {/* Bottom branding */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-              {member.skills.slice(0, 4).map((skill) => (
-                <span
-                  key={skill}
-                  style={{
-                    padding: '4px 8px',
-                    fontSize: '12px',
-                    borderRadius: '9999px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                    color: 'white'
-                  }}
-                >
-                  {skill}
-                </span>
-              ))}
+            {/* PALETTO Logo - Rotated */}
+            <div style={{
+              writingMode: 'vertical-rl',
+              transform: 'rotate(180deg)',
+              fontSize: '48px',
+              fontWeight: '900',
+              color: '#2196F3',
+              letterSpacing: '4px',
+              fontFamily: 'system-ui, -apple-system, sans-serif'
+            }}>
+              PALETTO
             </div>
-            <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'white' }}>PALETTO</span>
           </div>
         </div>
-
-        {/* Decorative elements */}
-        <div style={{
-          position: 'absolute',
-          right: '-32px',
-          bottom: '-32px',
-          width: '128px',
-          height: '128px',
-          borderRadius: '50%',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)'
-        }} />
-        <div style={{
-          position: 'absolute',
-          right: '-16px',
-          bottom: '-16px',
-          width: '80px',
-          height: '80px',
-          borderRadius: '50%',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)'
-        }} />
       </div>
     </div>
   );
