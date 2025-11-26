@@ -100,7 +100,7 @@ export default function AdminPage() {
           </form>
 
           <p className="text-center text-gray-400 text-sm mt-6">
-            기본 비밀번호: paletto2024
+            관리자에게 문의하세요
           </p>
         </div>
       </motion.div>
