@@ -271,10 +271,6 @@ export default function BusinessCard3D({ member, isPreview = false, showDownload
               <h2 className="text-[#2196F3] text-3xl font-black tracking-wider">
                 PALETTO
               </h2>
-              {/* Tagline */}
-              <p className="text-gray-400 text-xs tracking-widest">
-                DIGITAL BUSINESS CARD
-              </p>
             </div>
           </div>
         </div>

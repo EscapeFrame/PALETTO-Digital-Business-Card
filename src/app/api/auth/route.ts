@@ -10,30 +10,17 @@ interface SettingRow {
 export async function POST(request: NextRequest) {
   try {
     const { password } = await request.json();
+    const envPassword = process.env.ADMIN_PASSWORD;
 
-    // First try to get password from database
-    let isValid = false;
-
-    try {
-      const settings = await query<SettingRow[]>(
-        'SELECT setting_value FROM admin_settings WHERE setting_key = ?',
-        ['admin_password_hash']
+    if (!envPassword) {
+      console.error('ADMIN_PASSWORD is not set in environment variables');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
       );
-
-      if (settings.length > 0) {
-        isValid = await bcrypt.compare(password, settings[0].setting_value);
-      }
-    } catch {
-      // Database not available, fallback to env variable
-      const envPassword = process.env.ADMIN_PASSWORD || 'paletto2024';
-      isValid = password === envPassword;
     }
 
-    // Fallback: check against default password
-    if (!isValid) {
-      const defaultPassword = process.env.ADMIN_PASSWORD || 'paletto2024';
-      isValid = password === defaultPassword;
-    }
+    const isValid = password === envPassword;
 
     if (isValid) {
       // Generate a simple token (in production, use JWT)
