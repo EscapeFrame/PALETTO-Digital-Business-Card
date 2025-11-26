@@ -42,9 +42,9 @@ export default function Home() {
               </span>
             </h1>
             <p className="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
-              창의적인 아이디어와 기술로 새로운 가치를 만들어가는
+              PALETTO는 각기 다른 색깔을 가진 개발자들이 모여 하나의 아름다운 그림을 그리는 팀입니다.
               <br className="hidden md:block" />
-              PALETTO 팀을 소개합니다
+              우리는 서로 다른 개성과 재능을 조화시켜 혁신적인 기술과 창의적인 디자인으로 사용자에게 최고의 경험을 제공합니다.
             </p>
           </motion.div>
         </div>
